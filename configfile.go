@@ -63,6 +63,23 @@ import (
 	"strings"
 )
 
+type ConfigFiler interface {
+	AddSection ( string ) bool
+	RemoveSection ( string ) bool
+	AddOption ( string, string, string ) bool 
+	RemoveOption ( string, string ) bool
+	WriteConfigFile ( string, uint32, string ) error
+	GetSections () []string
+	HasSection ( string ) bool 
+	GetOptions ( string ) ( []string, error )
+	HasOption ( string, string ) bool
+	GetRawString ( string, string ) ( string, error )
+	GetString ( string, string ) ( string, error )
+	GetInt64 ( string, string ) ( int64, error )
+	GetFloat ( string, string ) ( float64, error )
+	GetBool ( string, string ) ( bool, error )
+}
+
 // ConfigFile is the representation of configuration settings.
 // The public interface is entirely through methods.
 type ConfigFile struct {
@@ -170,7 +187,6 @@ func (c *ConfigFile) RemoveOption(section string, option string) bool {
 // This representation can be filled with AddSection and AddOption and then
 // saved to a file using WriteConfigFile.
 func NewConfigFile() *ConfigFile {
-
 	c := new(ConfigFile)
 	c.data = make(map[string]map[string]string)
 
